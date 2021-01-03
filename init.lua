@@ -284,5 +284,5 @@ do
     end
     
     -- Saveinstance
-    loadstring("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua"))()
 end
