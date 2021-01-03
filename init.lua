@@ -244,9 +244,6 @@ do
     Define("isluau", function()
         return true
     end)
-    
-    -- Saveinstance
-    loadstring("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")()
 
     for key, value in pairs(debug) do
         Define(key, value)
@@ -285,5 +282,7 @@ do
             error("Attempt to require an unsupported module (Krnl:Require(\"" .. tostring(moduleName) .. "\"))")
         end
     end
-
+    
+    -- Saveinstance
+    loadstring("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")()
 end
