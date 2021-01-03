@@ -109,10 +109,22 @@ end
 
 do
     -- World:
+    local instances
+    for key, value in pairs(getregistry()) do
+        if (type(key) == "userdata" and type(value) == "table" and rawget(value, "__mode")) then
+            instances = value
+            break
+        end
+    end
+
+    Define("getinstances", function()
+        return instances
+    end)
+
     Define("getnilinstances", function()
         local list = {}
-        for _,instance in ipairs(getinstances()) do
-            if (instance.Parent == nil) then
+        for _,instance in ipairs(instances) do
+            if (not instance.Parent) then
                 table.insert(instance, list)
             end
         end
