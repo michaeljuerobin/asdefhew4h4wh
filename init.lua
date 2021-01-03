@@ -110,7 +110,7 @@ end
 do
     -- World:
     local instances
-    for key, value in pairs(getregistry()) do
+    for key, value in pairs(getreg()) do
         if (type(key) == "userdata" and type(value) == "table" and rawget(value, "__mode")) then
             instances = value
             break
