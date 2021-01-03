@@ -279,7 +279,7 @@ function SaveInstance.CacheScripts(parent)
 end
 
 
-function SaveInstance.Save(parent: Instance)
+function SaveInstance.Save(parent)
 
     parent = parent or game
 
