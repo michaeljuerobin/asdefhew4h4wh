@@ -186,7 +186,7 @@ do
     local httpGetAsync = game.HttpGetAsync
     local httpPostAsync = game.HttpPostAsync
 
-    AddMember(game, { "HttpGetAsync", "HttpGet" }, function(self, url)
+    AddMember(game, { "HttpGet" }, function(self, url)
         local networkMode = getnetworkmode()
         setnetworkmode(3)
         local result = httpGetAsync(self, url)
@@ -194,7 +194,7 @@ do
         return result
     end)
 
-    AddMember(game, { "HttpPostAsync", "HttpPost" }, function(self, ...)
+    AddMember(game, { "HttpPost" }, function(self, ...)
         local networkMode = getnetworkmode()
         setnetworkmode(3)
         local result = httpPostAsync(self, ...)
