@@ -14,15 +14,30 @@ SaveInstance._scriptCache = {}
 local encodeBase64 = assert(Krnl.Base64.Encode, "No base64 encoder found")
 local gethiddenproperty = gethiddenproperty or error
 
-local IGNORE_LIST = {
-    [game:GetService("CoreGui")] = true;
-    [game:GetService("CorePackages")] = true;
-    [game:GetService("Players")] = true;
-    [game:GetService("Chat"):FindFirstChild("ChatModules")] = true;
-    [game:GetService("Chat"):FindFirstChild("ClientChatModules")] = true;
-    [game:GetService("Chat"):FindFirstChild("ChatServiceRunner")] = true;
-    [game:GetService("Chat"):FindFirstChild("ChatScript")] = true;
-}
+local IGNORE_LIST = {} do
+    local function Ignore(...)
+        for _,instance in ipairs(table.pack(...)) do
+            if (not instance) then continue end
+            IGNORE_LIST[instance] = true
+        end
+    end
+
+    Ignore(
+        game:GetService("CoreGui"),
+        game:GetService("CorePackages"),
+        game:GetService("Players")
+    )
+
+    coroutine.resume(coroutine.create(function()
+        local chat = game:GetService("Chat")
+        Ignore(
+            chat:WaitForChild("ChatModules"),
+            chat:WaitForChild("ClientChatModules"),
+            chat:WaitForChild("ChatServiceRunner"),
+            chat:WaitForChild("ChatScript")
+        )
+    end))
+end
 
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
