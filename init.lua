@@ -125,7 +125,7 @@ do
         local list = {}
         for _,instance in ipairs(instances) do
             if (not instance.Parent) then
-                table.insert(instance, list)
+                table.insert(list, instance)
             end
         end
         return list
