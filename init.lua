@@ -123,7 +123,7 @@ do
 
     Define("getnilinstances", function()
         local list = {}
-        for _,instance in ipairs(instances) do
+        for _,instance in pairs(instances) do
             if (not instance.Parent) then
                 table.insert(list, instance)
             end
