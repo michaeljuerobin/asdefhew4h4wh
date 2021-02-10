@@ -147,31 +147,37 @@ do
     local CoreGui = game:GetService("CoreGui")
     local CorePackages = game:GetService("CorePackages")
 
-    local hookfunction = hookfunction
-    local require = require
-    local getloadedmodules = getloadedmodules
+    local functions = {
+        hookfunction = hookfunction,
+        getloadedmodules = getloadedmodules,
+        require = getrenv().require,
+    }
 
     -- Auto wrap hook in newcclosure:
     DefineCClosure("hookfunction", "hookfunc", function(func, hook)
         if (iscclosure(func) and islclosure(hook)) then
-            return hookfunction(func, newcclosure(hook))
+            return functions.hookfunction(func, newcclosure(hook))
         else
-            return hookfunction(func, hook)
+            return functions.hookfunction(func, hook)
         end
     end)
 
     -- Unlock modules before requiring:
-    DefineCClosure("require", function(moduleScript)
-        unlockModule(moduleScript)
-        local module = require(moduleScript)
-        lockModule(moduleScript)
-        return module
+    functions.require = hookfunction(functions.require, function(moduleScript)
+        if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
+            unlockModule(moduleScript)
+            local module = functions.require(moduleScript)
+            lockModule(moduleScript)
+            return module
+        else
+            return functions.require(moduleScript)
+        end
     end)
     
     -- Filter loaded modules:
     Define("getloadedmodules", function()
         local filteredModules = {}
-        for _,obj in ipairs(getloadedmodules()) do
+        for _,obj in ipairs(functions.getloadedmodules()) do
             if (obj:IsDescendantOf(CoreGui) or obj:IsDescendantOf(CorePackages)) then continue end
             table.insert(filteredModules, obj)
         end
