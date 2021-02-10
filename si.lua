@@ -346,6 +346,9 @@ function SaveInstance.Save(parent)
             className = "Folder"
         end
 
+        if not className then
+            return -- fixed by keshiki
+        end
         Insert("<Item class=\"" .. className .. "\" referent=\"" .. Identify(instance) .. "\">\n<Properties>")
 
         for _,property in ipairs(Classes[instance.ClassName] and Classes[instance.ClassName].Properties or {}) do
@@ -507,3 +510,4 @@ function SaveInstance.Save(parent)
 end
 
 getgenv().saveinstance = SaveInstance.Save
+saveinstance()
