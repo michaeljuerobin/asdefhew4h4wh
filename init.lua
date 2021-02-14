@@ -163,7 +163,7 @@ do
     end)
 
     -- Unlock modules before requiring:
-    functions.require = hookfunction(functions.require, function(moduleScript)
+    Define("require", function(moduleScript)
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
             unlockModule(moduleScript)
             local module = functions.require(moduleScript)
