@@ -146,6 +146,7 @@ do
     -- Wrapping:
     local CoreGui = game:GetService("CoreGui")
     local CorePackages = game:GetService("CorePackages")
+    local RunService = game:GetService("RunService")
 
     local functions = {
         hookfunction = hookfunction,
@@ -168,34 +169,38 @@ do
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
         local result, hb
-        hb = game:GetService("RunService").Heartbeat:Connect(function()
+        hb = RunService.Heartbeat:Connect(function()
             hb:Disconnect()
             result = functions.rconsoleinput()
         end)
         while (not result) do
-            game:GetService("RunService").Heartbeat:Wait()
+            RunService.Heartbeat:Wait()
         end
         return result
     end)
     
     Define("messagebox", function(text, caption, flags)
-        local thread = coroutine.running()
-        local hb
-        hb = game:GetService("RunService").Heartbeat:Connect(function()
+        local result, hb
+        hb = RunService.Heartbeat:Connect(function()
             hb:Disconnect()
-            coroutine.resume(thread, functions.messagebox(text, caption, flags))
+            result = functions.messagebox(text, caption, flags)
         end)
-        return coroutine.yield()
+        while (not result) do
+            RunService.Heartbeat:Wait()
+        end
+        return result
     end)
     
     Define("request", function(options, async)
-        local thread = coroutine.running()
-        local hb
-        hb = game:GetService("RunService").Heartbeat:Connect(function()
+        local result, hb
+        hb = RunService.Heartbeat:Connect(function()
             hb:Disconnect()
-            coroutine.resume(thread, functions.request(options, async))
+            result = functions.request(options, async)
         end)
-        return coroutine.yield()
+        while (not result) do
+            RunService.Heartbeat:Wait()
+        end
+        return result
     end)
     
     -- Unlock modules before requiring:
