@@ -509,4 +509,4 @@ function SaveInstance.Save(parent)
 
 end
 
-getgenv().saveinstance = SaveInstance.Save
+return SaveInstance
