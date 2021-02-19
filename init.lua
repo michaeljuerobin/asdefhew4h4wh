@@ -260,6 +260,7 @@ do
     AddMember(game, { "Lighting" }, game:GetService("Lighting"))
     AddMember(game, { "ReplicatedStorage" }, game:GetService("ReplicatedStorage"))
     AddMember(game, { "CoreGui" }, game:GetService("CoreGui"))
+    AddMember(game, { "RunService" }, game:GetService("RunService"))
 
 end
 
@@ -317,6 +318,10 @@ do
         Base64 = {
             Encode = base64_encode;
             Decode = base64_decode;
+        };
+        
+        crypt = {
+            hash = sha384_hash;
         };
 
         Vendor = {
