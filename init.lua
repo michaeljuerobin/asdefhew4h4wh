@@ -168,7 +168,7 @@ do
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
         local result, hb
-        hb = RunService.Heartbeat:Connect(function()
+        hb = game:GetSerivce("RunService").Heartbeat:Connect(function()
             hb:Disconnect()
             result = functions.rconsoleinput()
         end)
