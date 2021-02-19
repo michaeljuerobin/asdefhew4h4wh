@@ -167,12 +167,15 @@ do
     
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
-        local res;
-        spawn(function()
-            res = functions.rconsoleinput()
+        local result, hb
+        hb = RunService.Heartbeat:Connect(function()
+            hb:Disconnect()
+            result = functions.rconsoleinput()
         end)
-        repeat wait() until res
-        return res
+        while (not result) do
+            RunService.Heartbeat:Wait()
+        end
+        return result
     end)
     
     Define("messagebox", function(text, caption, flags)
