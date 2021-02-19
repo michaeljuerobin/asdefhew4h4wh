@@ -167,11 +167,12 @@ do
     
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
-        local thread = coroutine.running()   
+        local res;
         spawn(function()
-            coroutine.resume(thread, functions.rconsoleinput())
+            res = functions.rconsoleinput()
         end)
-        return coroutine.yield()
+        repeat wait() until res
+        return res
     end)
     
     Define("messagebox", function(text, caption, flags)
