@@ -167,10 +167,8 @@ do
     
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
-        local thread = coroutine.running()
-        local hb
-        hb = game:GetService("RunService").Heartbeat:Connect(function()
-            hb:Disconnect()
+        local thread = coroutine.running()   
+        spawn(function()
             coroutine.resume(thread, functions.rconsoleinput())
         end)
         return coroutine.yield()
