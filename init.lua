@@ -151,6 +151,9 @@ do
         hookfunction = hookfunction,
         getloadedmodules = getloadedmodules,
         require = getrenv().require,
+        request = request,
+        rconsoleinput = rconsoleinput,
+        messagebox = messagebox
     }
 
     -- Auto wrap hook in newcclosure:
@@ -161,7 +164,38 @@ do
             return functions.hookfunction(func, hook)
         end
     end)
-
+    
+    -- Spawn asynchronous function in new thread:
+    Define("rconsoleinput", function()
+        local thread = coroutine.running()
+        local hb
+        hb = game:GetService("RunService").Heartbeat:Connect(function()
+            hb:Disconnect()
+            coroutine.resume(thread, functions.rconsoleinput())
+        end)
+        return coroutine.yield()
+    end)
+    
+    Define("messagebox", function(text, caption, flags)
+        local thread = coroutine.running()
+        local hb
+        hb = game:GetService("RunService").Heartbeat:Connect(function()
+            hb:Disconnect()
+            coroutine.resume(thread, functions.messagebox(text, caption, flags))
+        end)
+        return coroutine.yield()
+    end)
+    
+    Define("request", function(options, async)
+        local thread = coroutine.running()
+        local hb
+        hb = game:GetService("RunService").Heartbeat:Connect(function()
+            hb:Disconnect()
+            coroutine.resume(thread, functions.request(options, async))
+        end)
+        return coroutine.yield()
+    end)
+    
     -- Unlock modules before requiring:
     DefineCClosure("require", function(moduleScript)
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
@@ -301,6 +335,12 @@ do
         end
     end
     
-    -- Saveinstance
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua"))()
+    function Krnl:LoadAsync(url)
+        return loadstring(game:HttpGetAsync(url))()
+    end
+
+    spawn(function()
+        Krnl.SaveInstance = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si_2.lua")
+        Define("saveinstance", Krnl.SaveInstance.Save)
+    end)
 end
