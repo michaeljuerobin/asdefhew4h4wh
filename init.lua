@@ -173,7 +173,7 @@ do
             result = functions.rconsoleinput()
         end)
         while (not result) do
-            RunService.Heartbeat:Wait()
+            game:GetSerivce("RunService").Heartbeat:Wait()
         end
         return result
     end)
