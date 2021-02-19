@@ -168,12 +168,12 @@ do
     -- Spawn asynchronous function in new thread:
     Define("rconsoleinput", function()
         local result, hb
-        hb = game:GetSerivce("RunService").Heartbeat:Connect(function()
+        hb = game:GetService("RunService").Heartbeat:Connect(function()
             hb:Disconnect()
             result = functions.rconsoleinput()
         end)
         while (not result) do
-            game:GetSerivce("RunService").Heartbeat:Wait()
+            game:GetService("RunService").Heartbeat:Wait()
         end
         return result
     end)
