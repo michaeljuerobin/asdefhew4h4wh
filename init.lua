@@ -204,7 +204,7 @@ do
     end)
     
     -- Unlock modules before requiring:
-    DefineCClosure("require", function(moduleScript)
+    hookfunction(getgenv().require, function(moduleScript)
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
             unlockModule(moduleScript)
             local module = functions.require(moduleScript)
