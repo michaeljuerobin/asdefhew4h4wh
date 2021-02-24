@@ -204,7 +204,7 @@ do
     end)
     
     -- Unlock modules before requiring:
-    hookfunction(getgenv().require, function(moduleScript)
+    --[[hookfunction(getgenv().require, function(moduleScript)
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
             unlockModule(moduleScript)
             local module = functions.require(moduleScript)
@@ -213,7 +213,7 @@ do
         else
             return functions.require(moduleScript)
         end
-    end)
+    end)]]
     
     -- Filter loaded modules:
     Define("getloadedmodules", function()
