@@ -173,7 +173,7 @@ do
             hb:Disconnect()
             result = functions.rconsoleinput()
         end)
-        while (not result) do
+        while (type(result) ~= "string") do
             RunService.Heartbeat:Wait()
         end
         return result
@@ -185,7 +185,7 @@ do
             hb:Disconnect()
             result = functions.messagebox(text, caption, flags)
         end)
-        while (not result) do
+        while (type(result) ~= "number") do
             RunService.Heartbeat:Wait()
         end
         return result
@@ -197,7 +197,7 @@ do
             hb:Disconnect()
             result = functions.request(options, async)
         end)
-        while (not result) do
+        while (type(result) ~= "table") do
             RunService.Heartbeat:Wait()
         end
         return result
@@ -206,9 +206,10 @@ do
     -- Unlock modules before requiring:
     DefineCClosure("require", function(moduleScript)
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
-            unlockModule(moduleScript)
+            local oldContext = getthreadcontext()
+            setthreadcontext(2)
             local module = functions.require(moduleScript)
-            lockModule(moduleScript)
+            setthreadcontext(oldContext)
             return module
         else
             return functions.require(moduleScript)
