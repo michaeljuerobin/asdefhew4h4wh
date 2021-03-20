@@ -305,6 +305,10 @@ do
     Define("isluau", function()
         return true
     end)
+    
+    Define("identifyexecutor", function()
+        return "Krnl"
+    end)
 
     for key, value in pairs(debug) do
         Define(key, value)
