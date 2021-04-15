@@ -361,3 +361,6 @@ do
         Define("saveinstance", Krnl.SaveInstance.Save)
     end)
 end
+
+run_auto_execute_scripts()
+run_teleport_queue_scripts()
