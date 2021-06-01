@@ -301,6 +301,7 @@ do
     Define("bit", bit32)
     Define("checkclosure", iskrnlclosure)
     Define("http_request", request)
+    Define("hiddenUI", gethui)
 
     Define("isluau", function()
         return true
