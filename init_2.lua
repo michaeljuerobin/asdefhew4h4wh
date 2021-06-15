@@ -233,22 +233,15 @@ do
     -- Members:
     local httpGetAsync = game.HttpGetAsync
     local httpPostAsync = game.HttpPostAsync
+    local KRNL_SAFE_CALL = KRNL_SAFE_CALL
 
-    AddMember(game, { "HttpGet", "HttpGetAsync" }, newycclosure(function(self, url)
-        local networkMode = getnetworkmode()
-        setnetworkmode(3)
-        local result = httpGetAsync(self, url)
-        setnetworkmode(networkMode)
-        return result
-    end))
+    AddMember(game, { "HttpGet", "HttpGetAsync" }, function(self, url)
+        return KRNL_SAFE_CALL(httpGetAsync, self, url)
+    end)
 
-    AddMember(game, { "HttpPost", "HttpPostAsync" }, newycclosure(function(self, ...)
-        local networkMode = getnetworkmode()
-        setnetworkmode(3)
-        local result = httpPostAsync(self, ...)
-        setnetworkmode(networkMode)
-        return result
-    end))
+    AddMember(game, { "HttpPost", "HttpPostAsync" }, function(self, ...)
+        return KRNL_SAFE_CALL(httpPostAsync, self, ...)
+    end)
 
     AddMember(game, { "GetObjects" }, function(self, assetId)
         if (type(assetId) == "number") then
