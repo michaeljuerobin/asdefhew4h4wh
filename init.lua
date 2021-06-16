@@ -233,21 +233,14 @@ do
     -- Members:
     local httpGetAsync = game.HttpGetAsync
     local httpPostAsync = game.HttpPostAsync
+    local KRNL_SAFE_CALL = KRNL_SAFE_CALL
 
     AddMember(game, { "HttpGet", "HttpGetAsync" }, function(self, url)
-        local networkMode = getnetworkmode()
-        setnetworkmode(3)
-        -- spawn has a built-in delay so the httpGetAsync will be run before networkMode is reset
-        --TODO: maybe just make newcclosure yieldable so i dont have to do shit like this
-        spawn(function() setnetworkmode(networkMode) end)
-        return httpGetAsync(self, url)
+        return KRNL_SAFE_CALL(httpGetAsync, self, url)
     end)
 
     AddMember(game, { "HttpPost", "HttpPostAsync" }, function(self, ...)
-        local networkMode = getnetworkmode()
-        setnetworkmode(3)
-        spawn(function() setnetworkmode(networkMode) end)
-        return httpPostAsync(self, ...)
+        return KRNL_SAFE_CALL(httpPostAsync, self, ...)
     end)
 
     AddMember(game, { "GetObjects" }, function(self, assetId)
@@ -358,11 +351,11 @@ do
     end
 
     spawn(function()
-        Krnl.SaveInstance = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")
-        Define("saveinstance", Krnl.SaveInstance.Save)
-            
         Krnl.WebSocket = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/websocket.lua")
         Define("WebSocket", Krnl.WebSocket)
+            
+        Krnl.SaveInstance = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")
+        Define("saveinstance", Krnl.SaveInstance.Save)
     end)
 end
 
