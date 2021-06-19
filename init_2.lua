@@ -45,28 +45,28 @@ end
 
 local AddMember, GetMember do
     local metatable = getrawmetatable(game)
-    local __index = metatable.__index
-    local __namecall = metatable.__namecall
+    local __index
+    local __namecall
 
     local instanceMembers = {}
 
     setreadonly(metatable, false)
 
-    metatable.__namecall = newcclosure(function(self, ...)
+    __namecall = hookfunction(metatable.__namecall, newcclosure(function(self, ...)
         if (checkcaller() and GetMember(self, getnamecallmethod())) then
             return instanceMembers[self][getnamecallmethod()](self, ...)
         else
             return __namecall(self, ...)
         end
-    end)
+    end))
 
-    metatable.__index = newcclosure(function(self, index)
+    __index = hookfunction(metatable.__index, newcclosure(function(self, index)
         if (checkcaller() and GetMember(self, index)) then
             return instanceMembers[self][index]
         else
             return __index(self, index)
         end
-    end)
+    end))
 
     function AddMember(instance, aliases, func)
         local memberList = instanceMembers[instance]
