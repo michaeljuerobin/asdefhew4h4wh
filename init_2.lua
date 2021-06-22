@@ -117,13 +117,13 @@ do
         end
     end
 
-    Define("getinstances", function()
+    Define("getinstancecache", function()
         return instances
     end)
 
     Define("getnilinstances", function()
         local list = {}
-        for _,instance in pairs(instances) do
+        for _,instance in pairs(getinstances()) do
             if (not instance.Parent) then
                 table.insert(list, instance)
             end
@@ -133,7 +133,7 @@ do
     
     Define("firesignal", function(signal, ...)
         for _,connection in ipairs(getconnections(signal)) do
-            connection:Fire(...)
+            connection.Function(...)
         end
     end)
 
@@ -208,8 +208,9 @@ do
         if (typeof(moduleScript) == "Instance" and moduleScript:IsA("ModuleScript")) then
             local oldContext = getthreadcontext()
             setthreadcontext(2)
-            local module = functions.require(moduleScript)
+            local status, module = pcall(functions.require, moduleScript)
             setthreadcontext(oldContext)
+            assert(status, module)
             return module
         else
             return functions.require(moduleScript)
