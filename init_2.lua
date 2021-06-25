@@ -52,19 +52,33 @@ local AddMember, GetMember do
 
     setreadonly(metatable, false)
 
-    __namecall = hookfunction(metatable.__namecall, newcclosure(function(self, ...)
-        if (checkcaller() and GetMember(self, getnamecallmethod())) then
-            return instanceMembers[self][getnamecallmethod()](self, ...)
+    local function hasvoid(len, ...)
+        return table.pack(...).n < len
+    end
+
+    __namecall = hookfunction(metatable.__namecall, newcclosure(function(...)
+        local self = ...
+        if
+            not hasvoid(1, ...)
+                and checkcaller()
+                and GetMember(self, getnamecallmethod())
+        then
+            return instanceMembers[self][getnamecallmethod()](...)
         else
-            return __namecall(self, ...)
+            return __namecall(...)
         end
     end))
 
-    __index = hookfunction(metatable.__index, newcclosure(function(self, index)
-        if (checkcaller() and GetMember(self, index)) then
-            return instanceMembers[self][index]
+    __index = hookfunction(metatable.__index, newcclosure(function(...)
+        local self, key = ...
+        if
+            not hasvoid(2, ...)
+                and checkcaller()
+                and GetMember(self, key)
+        then
+            return instanceMembers[self][key]
         else
-            return __index(self, index)
+            return __index(...)
         end
     end))
 
