@@ -240,7 +240,28 @@ do
         end
         return filteredModules
     end)
+    
+    DefineCClosure("hookmetamethod", function(object, method, hook)
+        local metatable = getrawmetatable(object)
 
+        assert(type(metatable) == "table",
+            "invalid argument #1 to 'hookmetamethod' (object with metatable expected)")
+        assert(type(method) == "string",
+            string.format("invalid argument #2 to 'hookmetamethod' (string expected, got %s)", type(method)))
+        assert(type(hook) == "function",
+            string.format("invalid argument #3 to 'hookmetamethod' (function expected, got %s)", type(hook)))
+
+        local hookMethod = metatable[method]
+        assert(type(hookMethod) == "function",
+            string.format("object does not have metamethod '%s'", method))
+
+        if islclosure(hook) then hook = newcclosure(hook) end
+
+        local oldMethod
+        oldMethod = hookfunction(hookMethod, hook)
+
+        return oldMethod
+    end)
 end
 
 
