@@ -52,7 +52,7 @@ local AddMember, GetMember do
 
     setreadonly(metatable, false)
 
-    local function hasvoid(len, ...)
+    function hasvoid(len, ...)
         return table.pack(...).n < len
     end
 
@@ -253,12 +253,22 @@ do
 
         local hookMethod = metatable[method]
         assert(type(hookMethod) == "function",
-            string.format("object does not have metamethod '%s'", method))
+             string.format("object does not have metamethod '%s'", method))
 
         if islclosure(hook) then hook = newcclosure(hook) end
 
+        local needsArgs = (method == "__index" and 2) or (method == "__namecall" and 1) or (method == "__newindex" and 3) or 0
+
         local oldMethod
-        oldMethod = hookfunction(hookMethod, hook)
+
+        local argHandler = newcclosure(function(...)
+            if hasvoid(needsArgs, ...) then
+                return oldMethod(...)
+            end
+            return hook(...)
+        end)
+
+        oldMethod = hookfunction(hookMethod, argHandler)
 
         return oldMethod
     end)
