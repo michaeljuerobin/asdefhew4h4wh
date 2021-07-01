@@ -241,7 +241,9 @@ do
         return filteredModules
     end)
     
-    DefineCClosure("hookmetamethod", function(object, method, hook)
+    DefineCClosure("hookmetamethod", function(object, method, hook, useArgGuard)
+        if useArgGuard == nil then useArgGuard = true end
+
         local metatable = getrawmetatable(object)
 
         assert(type(metatable) == "table",
@@ -261,14 +263,18 @@ do
 
         local oldMethod
 
-        local argHandler = newcclosure(function(...)
-            if hasvoid(needsArgs, ...) then
-                return oldMethod(...)
-            end
-            return hook(...)
-        end)
+        if useArgGuard then
+            local argHandler = newcclosure(function(...)
+                if hasvoid(needsArgs, ...) then
+                    return oldMethod(...)
+                end
+                return hook(...)
+            end)
 
-        oldMethod = hookfunction(hookMethod, argHandler)
+            oldMethod = hookfunction(hookMethod, argHandler)
+        else
+            oldMethod = hookfunction(hookMethod, hook)
+        end
 
         return oldMethod
     end)
