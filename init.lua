@@ -359,6 +359,9 @@ do
     for key, value in pairs(debug) do
         Define(key, value)
     end
+    
+    getgenv().debug.getmetatable = getrawmetatable
+    getgenv().debug.setmetatable = setrawmetatable
 
 end
 
