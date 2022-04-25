@@ -198,6 +198,45 @@ do
                 };
             };
         };
+        
+        Part = {
+			Shape = {
+				MemberType = "Property";
+				Serialization = {
+					CanSave = true;
+				};
+				ValueType = {
+					Category = "Enum";
+					Name = "PartType";
+				};
+			};
+		};
+
+		Seat = {
+			Shape = {
+				MemberType = "Property";
+				Serialization = {
+					CanSave = true;
+				};
+				ValueType = {
+					Category = "Enum";
+					Name = "PartType";
+				};
+			};
+		};
+
+		SpawnLocation = {
+			Shape = {
+				MemberType = "Property";
+				Serialization = {
+					CanSave = true;
+				};
+				ValueType = {
+					Category = "Enum";
+					Name = "PartType";
+				};
+			};
+		};
     }
 
     for _,class in ipairs(ApiDump.Classes) do
