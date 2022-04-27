@@ -340,6 +340,40 @@ do
 
 end
 
+do
+	-- Cache library
+	getgenv().cache.invalidate = newcclosure(function(instance)
+		local instance_cache = getreg()[cache.getinstancecachekey()]
+		local instance_key = cache.getinstancekey(instance)
+
+		instance_cache[instance_key] = nil
+	end)
+
+	getgenv().cache.replace = newcclosure(function(old, new)
+		local instance_cache = getreg()[cache.getinstancecachekey()]
+		local instance_key = cache.getinstancekey(old)
+
+		instance_cache[instance_key] = new
+	end)
+
+	getgenv().cache.iscached = newcclosure(function(instance)
+		local instance_cache = getreg()[cache.getinstancecachekey()]
+		local instance_key = cache.getinstancekey(instance)
+
+		return instance_cache[instance_key] ~= nil
+	end)
+
+	DefineCClosure("cloneref", function(instance)
+		local instance_cache = getreg()[cache.getinstancecachekey()]
+		local instance_key = cache.getinstancekey(instance)
+
+		cache.invalidate(instance)
+		local clone = cache.cloneinstance(instance)
+		cache.replace(instance, instance)
+
+		return clone
+	end)
+end
 
 do
     -- Functions & aliases:
@@ -347,6 +381,10 @@ do
     Define("checkclosure", iskrnlclosure)
     Define("http_request", request)
     Define("hiddenUI", gethui)
+	Define("getthreadidentity", getthreadcontext)
+	Define("setidentity", setthreadcontext)
+	--UNC
+	Define("isexecutorclosure", iskrnlclosure)
 
     Define("isluau", function()
         return true
