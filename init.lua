@@ -381,10 +381,12 @@ do
     Define("checkclosure", iskrnlclosure)
     Define("http_request", request)
     Define("hiddenUI", gethui)
-	Define("getthreadidentity", getthreadcontext)
-	Define("setidentity", setthreadcontext)
-	--UNC
-	Define("isexecutorclosure", iskrnlclosure)
+    Define("getthreadidentity", getthreadcontext)
+    Define("setidentity", setthreadcontext)
+    -- UNC
+    Define("isexecutorclosure", iskrnlclosure)
+    Define("rconsoledestroy", rconsoleclose)
+    Define("rconsolesettitle", rconsolename)
 
     Define("isluau", function()
         return true
@@ -403,6 +405,14 @@ do
 
 end
 
+do
+    -- crypt global (UNC)
+    Define("crypt", {
+        base64encode = base64_encode;
+        base64decode = base64_decode;
+        hash = sha384_hash;
+    })
+end
 
 do
     -- Krnl global:
