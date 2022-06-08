@@ -383,6 +383,8 @@ do
     Define("hiddenUI", gethui)
 	Define("getthreadidentity", getthreadcontext)
 	Define("setidentity", setthreadcontext)
+	--UNC
+	Define("isexecutorclosure", iskrnlclosure)
 
     Define("isluau", function()
         return true
@@ -441,12 +443,20 @@ do
         return loadstring(game:HttpGetAsync(url))()
     end
 
+    local loadsaveinstance = loadsaveinstance
+    getgenv().saveinstance = function(object, filename, options)
+        object = object or game
+
+        local SaveInstanceAPI = loadsaveinstance()
+        SaveInstanceAPI.Init()
+        SaveInstanceAPI.Save(object, filename, options)
+    end
+
+    getgenv().loadsaveinstance = nil
+	
     spawn(function()
         Krnl.WebSocket = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/websocket.lua")
         Define("WebSocket", Krnl.WebSocket)
-            
-        Krnl.SaveInstance = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")
-        Define("saveinstance", Krnl.SaveInstance.Save)
     end)
 end
 
