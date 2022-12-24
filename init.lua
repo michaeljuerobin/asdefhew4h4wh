@@ -165,10 +165,7 @@ do
     local functions = {
         hookfunction = hookfunction,
         getloadedmodules = getloadedmodules,
-        require = getrenv().require,
-        request = request,
-        rconsoleinput = rconsoleinput,
-        messagebox = messagebox
+        require = getrenv().require
     }
 
     -- Auto wrap hook in newcclosure:
@@ -178,43 +175,6 @@ do
         else
             return functions.hookfunction(func, hook)
         end
-    end)
-    
-    -- Spawn asynchronous function in new thread:
-    Define("rconsoleinput", function()
-        local result, hb
-        hb = RunService.Heartbeat:Connect(function()
-            hb:Disconnect()
-            result = functions.rconsoleinput()
-        end)
-        while (type(result) ~= "string") do
-            RunService.Heartbeat:Wait()
-        end
-        return result
-    end)
-    
-    Define("messagebox", function(text, caption, flags)
-        local result, hb
-        hb = RunService.Heartbeat:Connect(function()
-            hb:Disconnect()
-            result = functions.messagebox(text, caption, flags)
-        end)
-        while (type(result) ~= "number") do
-            RunService.Heartbeat:Wait()
-        end
-        return result
-    end)
-    
-    Define("request", function(options, async)
-        local result, hb
-        hb = RunService.Heartbeat:Connect(function()
-            hb:Disconnect()
-            result = functions.request(options, async)
-        end)
-        while (type(result) ~= "table") do
-            RunService.Heartbeat:Wait()
-        end
-        return result
     end)
     
     -- Unlock modules before requiring:
@@ -443,12 +403,20 @@ do
         return loadstring(game:HttpGetAsync(url))()
     end
 
+    local loadsaveinstance = loadsaveinstance
+    getgenv().saveinstance = function(object, filename, options)
+        object = object or game
+
+        local SaveInstanceAPI = loadsaveinstance()
+        SaveInstanceAPI.Init()
+        SaveInstanceAPI.Save(object, filename, options)
+    end
+
+    getgenv().loadsaveinstance = nil
+	
     spawn(function()
         Krnl.WebSocket = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/websocket.lua")
         Define("WebSocket", Krnl.WebSocket)
-            
-        Krnl.SaveInstance = Krnl:LoadAsync("https://raw.githubusercontent.com/michaeljuerobin/asdefhew4h4wh/main/si.lua")
-        Define("saveinstance", Krnl.SaveInstance.Save)
     end)
 end
 
